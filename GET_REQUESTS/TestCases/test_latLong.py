@@ -40,11 +40,14 @@ def get_actual_country_state_city(cnty, zipCode):
     url = BASE_URL + cnty + "/" + zipCode
     response = requests.get(url)
     statusCode = response.status_code
-    json_response = json.loads(response.text)
-    places = jsonpath.jsonpath(json_response, "places")
-    latitude = places[0][0]['latitude']
-    longitude = places[0][0]['longitude']
-    return (statusCode, math.floor(float(latitude)),math.floor(float(longitude)))
+    if statusCode == 200:
+        json_response = json.loads(response.text)
+        places = jsonpath.jsonpath(json_response, "places")
+        latitude = places[0][0]['latitude']
+        longitude = places[0][0]['longitude']
+        return (math.floor(float(latitude)),math.floor(float(longitude)))
+    else:
+        return statusCode
 
 
 
@@ -65,10 +68,6 @@ def lat_lng_(zipCode, countryName):
     expected_lat_lng_pair = get_expected_lat_long(zipCode, countryName)
     actual_lat_lng_pair = get_actual_country_state_city(countryName.lower(), zipCode)
 
-    print()
-    print(expected_lat_lng_pair)
-    print(actual_lat_lng_pair)
-
     low_lat = expected_lat_lng_pair[0]-100
     high_lat = expected_lat_lng_pair[0] + 100
     for x in range(low_lat, high_lat):
@@ -80,17 +79,17 @@ def lat_lng_(zipCode, countryName):
         lng_range.append(y)
 
     # print(actual_lat_lng_pair[2])
-    if actual_lat_lng_pair[1] in lat_range:
+    if actual_lat_lng_pair[0] in lat_range:
         assert True
     else:
         assert False, "The latitude values do not match!"
     
-    if actual_lat_lng_pair[2] in lng_range:
+    if actual_lat_lng_pair[1] in lng_range:
         assert True
     else:
         assert False, "The longitude values do not match!"
     
-# happy path
+# happy scenario
 def test_lat_lng():
     with open('testdata_lat_lng.csv') as csvfile:
         data = csv.reader(csvfile, delimiter=',')
@@ -103,6 +102,34 @@ def test_lat_lng():
                 lat_lng_(i[0], 'FR')
             elif i[1] == 'ES':
                 lat_lng_(i[0], 'ES')
+            else:
+                print("The validation is for US, DE, FR and ES countries! Please check the country.")
+
+
+# negative scenario
+def test_lat_lng_invalid():
+    with open('testdata_lat_lng_invalid.csv') as csvfile:
+        data = csv.reader(csvfile, delimiter=',')
+        for i in data:
+            if i[1] == 'US':
+                statusCode = get_actual_country_state_city("US", i[0])
+                assert statusCode == 404
+
+            elif i[1] == 'DE':
+                statusCode = get_actual_country_state_city("US", i[0])
+                assert statusCode == 404
+
+            elif i[1] == 'FR':
+                statusCode = get_actual_country_state_city("US", i[0])
+                assert statusCode == 404
+
+            elif i[1] == 'ES':
+                statusCode = get_actual_country_state_city("US", i[0])
+                assert statusCode == 404
+
+            else:
+                print("The validation is for US, DE, FR and ES countries! Please check the country.")
+
     
             
 
