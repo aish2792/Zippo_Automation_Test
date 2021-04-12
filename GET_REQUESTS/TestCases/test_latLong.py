@@ -44,7 +44,7 @@ def get_actual_country_state_city(cnty, zipCode):
     places = jsonpath.jsonpath(json_response, "places")
     latitude = places[0][0]['latitude']
     longitude = places[0][0]['longitude']
-    return (math.floor(float(latitude)),math.floor(float(longitude)))
+    return (statusCode, math.floor(float(latitude)),math.floor(float(longitude)))
 
 
 
@@ -52,7 +52,7 @@ def get_actual_country_state_city(cnty, zipCode):
 def lat_lng_(zipCode, countryName):
     """ A function that tests whether the actual latitude and longitude for a given zipcode lies within the range of the expected
     latitude and longitude values. """
-    
+
     lat_range = []
     lng_range = []
     low_lat = 0
@@ -65,23 +65,32 @@ def lat_lng_(zipCode, countryName):
     expected_lat_lng_pair = get_expected_lat_long(zipCode, countryName)
     actual_lat_lng_pair = get_actual_country_state_city(countryName.lower(), zipCode)
 
-    low_lat = expected_lat_lng_pair[0]-25
-    high_lat = expected_lat_lng_pair[0] + 25
+    print()
+    print(expected_lat_lng_pair)
+    print(actual_lat_lng_pair)
+
+    low_lat = expected_lat_lng_pair[0]-100
+    high_lat = expected_lat_lng_pair[0] + 100
     for x in range(low_lat, high_lat):
         lat_range.append(x)
 
-    low_lng = expected_lat_lng_pair[1]-25
-    high_lng = expected_lat_lng_pair[1] + 25
+    low_lng = expected_lat_lng_pair[1]-100
+    high_lng = expected_lat_lng_pair[1] + 100
     for y in range(low_lng, high_lng):
         lng_range.append(y)
 
-
-    if actual_lat_lng_pair[0] in lat_range:
+    # print(actual_lat_lng_pair[2])
+    if actual_lat_lng_pair[1] in lat_range:
         assert True
     else:
-        assert False, "The latitude and longitude values do not match!"
+        assert False, "The latitude values do not match!"
     
-
+    if actual_lat_lng_pair[2] in lng_range:
+        assert True
+    else:
+        assert False, "The longitude values do not match!"
+    
+# happy path
 def test_lat_lng():
     with open('testdata_lat_lng.csv') as csvfile:
         data = csv.reader(csvfile, delimiter=',')
