@@ -2,10 +2,7 @@ import pytest
 import requests
 import json
 import jsonpath
-
-BASE_URL = "https://api.zippopotam.us/"
-
-
+from CONSTANTS import *
 
 # @pytest.mark.country  py.test -m country
 # To run test cases in parallel mode - pip install pytest-xdist : py.test -n 5
@@ -13,10 +10,10 @@ BASE_URL = "https://api.zippopotam.us/"
 """ Test countries """
 
 def setup_module(module):
-    print("*********************** Test Case : test_Country_Valid.py begins ***************************")
+    print("*********************** Test Case : test_country_valid.py begins ***************************")
 
 def teardown_module(module):
-    print("*********************** Test Case : test_Country_Valid.py ends ***************************")
+    print("*********************** Test Case : test_country_valid.py ends ***************************")
 
 def test_status_code():
     response = requests.get(BASE_URL)
@@ -29,11 +26,10 @@ def test_check_us_country_valid_data():
     for i in ZIP_CODES:
         url = BASE_URL + "us/" + i
         response = requests.get(url)
-        # print("Status code is : ", response.status_code)
         json_response = json.loads(response.text)
         country = jsonpath.jsonpath(json_response, "country abbreviation")
-        assert country[0] == 'US', "Country Mismatch"
-        assert response.status_code == 200, "Status code error: Does not match 200"
+        assert country[0] == 'US', f"Country Mismatch : {country[0]} != US"
+        assert response.status_code == 200, f"Status code error: Does not match 200 : {response.status_code} != 200"
 
 # Germany
 def test_check_de_country_valid_data():
@@ -44,8 +40,8 @@ def test_check_de_country_valid_data():
         response = requests.get(url)
         json_response = json.loads(response.text)
         country = jsonpath.jsonpath(json_response, "country abbreviation")
-        assert country[0] == 'DE', "Country Mismatch"
-        assert response.status_code == 200, "Status code error: Does not match 200"
+        assert country[0] == 'DE', f"Country Mismatch : {country[0]} != DE"
+        assert response.status_code == 200, f"Status code error: Does not match 200 : {response.status_code} != 200"
 
 
 # France
@@ -58,8 +54,8 @@ def test_check_country_valid_data():
         # print("Status code is : ", response.status_code)
         json_response = json.loads(response.text)
         country = jsonpath.jsonpath(json_response, "country abbreviation")
-        assert country[0] == 'FR', "Country Mismatch"
-        assert response.status_code == 200, "Status code error: Does not match 200"
+        assert country[0] == 'FR', f"Country Mismatch : {country[0]} != FR"
+        assert response.status_code == 200, f"Status code error: Does not match 200 : {response.status_code} != 200"
 
 
 # Spain
@@ -72,30 +68,9 @@ def test_check_country_valid_data():
         # print("Status code is : ", response.status_code)
         json_response = json.loads(response.text)
         country = jsonpath.jsonpath(json_response, "country abbreviation")
-        assert country[0] == 'ES', "Country Mismatch"
-        assert response.status_code == 200, "Status code error: Does not match 200"
+        assert country[0] == 'ES', f"Country Mismatch : {country[0]} != ES"
+        assert response.status_code == 200, f"Status code error: Does not match 200 : {response.status_code} != 200"
 
-
-
-# def test_check_country_invalid_data():
-#     for i in ZIP_CODES:
-#         url = BASE_URL + "us/" + i
-#         response = requests.get(url)
-#         print("Response is : ", response.status_code)
-#         json_response = json.loads(response.text)
-#         country = jsonpath.jsonpath(json_response, "country abbreviation")
-#         assert country[0] == 'US', "Country Mismatch"
-#         assert response.status_code == 404, "Status code error: Does not match 200"
-
-
-# def test_check_state_city():
-#     url = BASE_URL + "us/19144"
-#     response = requests.get(url)
-#     json_response = json.loads(response.text)
-#     places = jsonpath.jsonpath(json_response, "places")
-#     assert places[0][0]['state'] == 'Pennsylvania'
-#     assert places[0][0]['place name'] == 'Philadelphia'
-#     assert response.status_code == 200, "Status code error: Does not match 200"
 
     
 

@@ -2,11 +2,10 @@ import pytest
 import requests
 import json
 import jsonpath
+from CONSTANTS import *
 
-BASE_URL = "https://api.zippopotam.us/"
 
-
-""" Test Case for the Home Page """
+""" Base Test Cases """
 
 def setup_module(module):
     print("*********************** Test Case - HOME PAGE - Begins ***************************")
@@ -17,3 +16,5 @@ def teardown_module(module):
 def test_status_code():
     response = requests.get(BASE_URL)
     assert response.status_code == 200
+
+# test response headers

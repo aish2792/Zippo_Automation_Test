@@ -2,8 +2,7 @@ import pytest
 import requests
 import json
 import jsonpath
-
-BASE_URL = "https://api.zippopotam.us/"
+from CONSTANTS import *
 
 # @pytest.mark.country  py.test -m country
 # To run test cases in parallel mode - pip install pytest-xdist : py.test -n 5
@@ -11,10 +10,10 @@ BASE_URL = "https://api.zippopotam.us/"
 """ Test countries that have special combinations of zip codes """
 
 def setup_module(module):
-    print("*********************** Test Case : test_Country_Exceptions.py begins ***************************")
+    print("*********************** Test Case : test_country_exceptions.py begins ***************************")
 
 def teardown_module(module):
-    print("*********************** Test Case : test_Country_Exceptions.py ends ***************************")
+    print("*********************** Test Case : test_country_exceptions.py ends ***************************")
 
 def test_status_code():
     response = requests.get(BASE_URL)

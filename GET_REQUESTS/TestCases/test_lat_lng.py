@@ -4,8 +4,7 @@ import json
 import jsonpath
 import csv
 import math
-
-BASE_URL = "https://api.zippopotam.us/"
+from CONSTANTS import *
 
 # @pytest.mark.country  py.test -m country
 # To run test cases in parallel mode - pip install pytest-xdist : py.test -n 5
@@ -13,26 +12,28 @@ BASE_URL = "https://api.zippopotam.us/"
 """ Test countries that have special combinations of zip codes """
 
 def setup_module(module):
-    print("*********************** Test Case : test_latLong.py begins ***************************")
+    print("*********************** Test Case : test_lat_lng.py begins ***************************")
 
 def teardown_module(module):
-    print("*********************** Test Case : test_latLong.py ends ***************************")
+    print("*********************** Test Case : test_lat_lng.py ends ***************************")
 
 def test_status_code():
     response = requests.get(BASE_URL)
     assert response.status_code == 200
 
+
 def get_expected_lat_long(zipCode, countryName):
+    """ A function that returns latitude and longitude pair using zipcode - mapquest api"""
 
     parameters = {
         "key" : "0pU2O7yVX0a4pPAYx15l32sb1bf5Yh1q",
-        # "location" : "02062,US"
         "location" : zipCode + "," + countryName.upper()
     }
-    response = requests.get("http://www.mapquestapi.com/geocoding/v1/address", params=parameters)
+    response = requests.get(MAPQUEST_URL, params=parameters)
     json_response = json.loads(response.text)
     latLng = json_response["results"][0]["locations"][0]["latLng"]
     return (math.floor(latLng['lat']), math.floor(latLng['lng']))
+
 
 def get_actual_country_state_city(cnty, zipCode):
     """ A function that returns latitude and longitude of the place based on the response from the api """
@@ -50,48 +51,23 @@ def get_actual_country_state_city(cnty, zipCode):
         return statusCode
 
 
-
-
 def lat_lng_(zipCode, countryName):
     """ A function that tests whether the actual latitude and longitude for a given zipcode lies within the range of the expected
     latitude and longitude values. """
 
-    lat_range = []
-    lng_range = []
-    low_lat = 0
-    high_lat = 0
-    low_lng = 0
-    high_lng = 0
-    
-    # creating a range of longitudes and latitudes around +/- 5
+    TOLERANCE = 100
 
-    expected_lat_lng_pair = get_expected_lat_long(zipCode, countryName)
-    actual_lat_lng_pair = get_actual_country_state_city(countryName.lower(), zipCode)
+    expected_lat, expected_lng = get_expected_lat_long(zipCode, countryName)
+    actual_lat, actual_lng = get_actual_country_state_city(countryName.lower(), zipCode)
 
-    low_lat = expected_lat_lng_pair[0]-100
-    high_lat = expected_lat_lng_pair[0] + 100
-    for x in range(low_lat, high_lat):
-        lat_range.append(x)
+    assert actual_lat in range(expected_lat - TOLERANCE, expected_lat + TOLERANCE), f"The latitude values do not match! : {expected_lat} != {actual_lat}"
+    assert actual_lng in range(expected_lng - TOLERANCE, expected_lng + TOLERANCE), f"The longitude values do not match! : {expected_lng} != {actual_lng}"
 
-    low_lng = expected_lat_lng_pair[1]-100
-    high_lng = expected_lat_lng_pair[1] + 100
-    for y in range(low_lng, high_lng):
-        lng_range.append(y)
-
-    # print(actual_lat_lng_pair[2])
-    if actual_lat_lng_pair[0] in lat_range:
-        assert True
-    else:
-        assert False, "The latitude values do not match!"
-    
-    if actual_lat_lng_pair[1] in lng_range:
-        assert True
-    else:
-        assert False, "The longitude values do not match!"
     
 # happy scenario
+@pytest.mark.latlng
 def test_lat_lng():
-    with open('testdata_lat_lng.csv') as csvfile:
+    with open(TEST_DATA_LAT_LNG) as csvfile:
         data = csv.reader(csvfile, delimiter=',')
         for i in data:
             if i[1] == 'US':
@@ -107,8 +83,9 @@ def test_lat_lng():
 
 
 # negative scenario
+@pytest.mark.latlng
 def test_lat_lng_invalid():
-    with open('testdata_lat_lng_invalid.csv') as csvfile:
+    with open(TEST_DATA_INVALID) as csvfile:
         data = csv.reader(csvfile, delimiter=',')
         for i in data:
             if i[1] == 'US':
