@@ -18,3 +18,8 @@ def test_status_code():
     assert response.status_code == 200
 
 # test response headers
+@pytest.mark.responseheaders
+def test_response_header():
+    response = requests.head(BASE_URL)
+    print(response.headers)
+    assert response.headers["Content-Type"] == 'text/html; charset=UTF-8', f'Content-Type is not html'
