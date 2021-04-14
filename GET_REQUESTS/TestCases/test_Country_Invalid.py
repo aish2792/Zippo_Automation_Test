@@ -4,7 +4,6 @@ import json
 import jsonpath
 from CONSTANTS import *
 
-BASE_URL = "https://api.zippopotam.us/"
 
 # @pytest.mark.country  py.test -m country
 # To run test cases in parallel mode - pip install pytest-xdist : py.test -n 5
