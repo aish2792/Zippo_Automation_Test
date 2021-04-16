@@ -7,10 +7,10 @@ from CONSTANTS import *
 
 """ Base Test Cases """
 
-def setup_module(module):
+def setup_module():
     print("*********************** Test Case - HOME PAGE - Begins ***************************")
 
-def teardown_module(module):
+def teardown_module():
     print("*********************** Test Case - HOME PAGE - Ends ***************************")
 
 def test_status_code():

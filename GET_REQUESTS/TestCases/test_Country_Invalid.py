@@ -8,10 +8,10 @@ from CONSTANTS import *
 # @pytest.mark.country  py.test -m country
 # To run test cases in parallel mode - pip install pytest-xdist : py.test -n 5
 
-def setup_module(module):
+def setup_module():
     print("*********************** Test Case : test_Country_Invalid.py begins ***************************")
 
-def teardown_module(module):
+def teardown_module():
     print("*********************** Test Case : test_Country_Invalid.py ends ***************************")
 
 def test_status_code():

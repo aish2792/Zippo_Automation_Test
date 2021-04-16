@@ -5,19 +5,13 @@ import json
 import jsonpath
 from CONSTANTS import *
 
-# BASE_URL = "https://api.zippopotam.us/"
 
-# print(BASE_URL)
+""" Test country, state, city  """
 
-# @pytest.mark.country  py.test -m country
-# To run test cases in parallel mode - pip install pytest-xdist : py.test -n 5
-
-""" Test countries that have special combinations of zip codes """
-
-def setup_module(module):
+def setup_module():
     print("*********************** Test Case : test_city_state.py begins ***************************")
 
-def teardown_module(module):
+def teardown_module():
     print("*********************** Test Case : test_city_state.py ends ***************************")
 
 def get_country_state_city(cnty, zipCode):

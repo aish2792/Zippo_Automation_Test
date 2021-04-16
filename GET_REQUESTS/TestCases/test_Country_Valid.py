@@ -9,10 +9,10 @@ from CONSTANTS import *
 
 """ Test countries """
 
-def setup_module(module):
+def setup_module():
     print("*********************** Test Case : test_country_valid.py begins ***************************")
 
-def teardown_module(module):
+def teardown_module():
     print("*********************** Test Case : test_country_valid.py ends ***************************")
 
 def test_status_code():

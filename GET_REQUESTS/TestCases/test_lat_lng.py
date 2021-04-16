@@ -11,10 +11,10 @@ from CONSTANTS import *
 
 """ Test countries that have special combinations of zip codes """
 
-def setup_module(module):
+def setup_module():
     print("*********************** Test Case : test_lat_lng.py begins ***************************")
 
-def teardown_module(module):
+def teardown_module():
     print("*********************** Test Case : test_lat_lng.py ends ***************************")
 
 def test_status_code():
